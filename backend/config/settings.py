@@ -43,7 +43,7 @@ AUTH_USER_MODEL = 'accounts.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',   # serves static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',   # harmless if unused on Vercel; static files are also routed via vercel.json
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -74,7 +74,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
-# Uses DATABASE_URL env var in production (Postgres); falls back to local SQLite.
+# Uses DATABASE_URL env var in production (Neon Postgres); falls back to local SQLite.
 
 DATABASES = {
     'default': dj_database_url.config(
@@ -114,9 +114,10 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
+# STATIC_ROOT matches the "distDir" used in vercel.json's static-build config.
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'staticfiles_build' / 'static'
 STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
